@@ -9,19 +9,13 @@ format:
 execute:
   echo: false
   warning: false
-knitr:
-  opts_chunk:
-    dev: [svglite, darksvglite]
-    fig.ext: [.light.svg, .dark.svg]
 filters:
   - light-dark.lua
-# include-after-body:
-#   text: |
-#     <script type="application/javascript" src="light-dark.js"></script>
 ---
 
 ```{r}
 #| include: false
+
 library(ggplot2)
 theme_light <- function() {
   theme_minimal(base_size = 11) %+%
@@ -75,6 +69,9 @@ darksvglite <- function(file, width, height) {
 #| fig-width: !expr 16/2
 #| fig-height: !expr 9/2
 #| out-width: 80%
+#| dev: [svglite,darksvglite]
+#| fig.ext: [.light.svg, .dark.svg]
+
 library(ggplot2)
 library(palmerpenguins)
 theme_set(theme_light())

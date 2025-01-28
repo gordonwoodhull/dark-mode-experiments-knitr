@@ -10,7 +10,7 @@ execute:
   echo: false
   warning: false
 filters:
-  - light-dark.lua
+  - light-dark-knitr.lua
 ---
 
 ```{r}

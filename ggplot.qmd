@@ -1,5 +1,5 @@
 ---
-title: "Generated images for dark and light mode"
+title: "knitr dark mode - ggplot"
 format:
   html:
     css: light-dark.css

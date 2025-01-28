@@ -1,19 +1,51 @@
-# Experiments with dark mode in knitr
+# Experiments with dark mode in Quarto's knitr engine
 
-The objective for all engines is to produce `img.quarto-light-image` and `img.quarto-dark-image` next to each other (inside `figure > p` to be precise).
+## Overview
 
-For the knitr implementation, we currently rely on the vectorized `dev` chunk option, with
+Experimental implementation of dark mode for plotting libraries in Quarto's knitr engine, using its vectorized `dev` chunk option.
+
+Implemented in Quarto's "user-land", i.e. Lua and CSS, without any changes to Quarto.
+
+The objective for all engines is to produce `img.quarto-light-image` and `img.quarto-dark-image` next to each other (inside `figure > p` currently). Then they can easily and safely be swapped using
+
+```css
+body.quarto-light img.quarto-dark-image {
+  display: none;
+}
+body.quarto-dark img.quarto-light-image {
+  display: none;
+}
+```
+
+## knitr implementation
+
+See also: [Experiments with dark mode in Quarto's Jupyter engine](https://github.com/gordonwoodhull/dark-mode-experiments-jupyter)
+
+We rely on knitr's vectorized `dev` chunk option, with corresponding filenames:
 
 ```
+#| dev: [svglite,darksvglite]
 #| fig.ext: [.light.svg, .dark.svg]
 ```
 
 in the cell or in `opts_chunk`. This replays the plot with multiple "devices", although we are really just setting stuff up for the plotting library in a function that sets up the device and returns it.
 
-With those assumptions, it's reasonably safe to pick up any image whose `src` ends with `.light.svg` and put another image next to it pointing to the output with the corresponding dark filename. (Maybe we should check here if both exist and fall back to light. And we'll have to have a list of extensions, probably.)
+With those assumptions, it's reasonably safe in the Lua filter to
 
-Then we also apply the `.quarto-light-image` and `.quarto-dark-image` classes, and we're done.
+- pick up any image whose `src` ends with `.light.svg`
+- put another image next to it pointing to the output with the corresponding dark filename
+- apply the `.quarto-light-image` and `.quarto-dark-image` classes to the images
 
-We'll see how well this scales across all R plotting libraries. And we'll also do something similar for HTML output, where the code certainly does need to be run twice and the `dev` chunk option won't help.
+## Future
+
+Maybe we should check if both image files exist and fall back appropriately if there is only one image, accept only dark image, etc.
+
+We'll need a list of image file extensions.
+
+We'll see how well this scales across all R plotting libraries.
+
+Do something similar for HTML output, where the code certainly does need to be run twice and knitr's `dev` chunk option probably won't help. It may be necessary to fall back to the bulky but reasonably robust (?) **marker spans** approach used in the [Jupyter side of this experiment](https://github.com/gordonwoodhull/dark-mode-experiments-jupyter).
+
+## Prior work
 
 This is based on Mickaël Canouil's excellent introduction [Quarto Q&A: How to have images for both light and dark mode](https://mickael.canouil.fr/posts/2023-05-30-quarto-light-dark/).

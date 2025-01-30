@@ -2,17 +2,21 @@
 
 ## Overview
 
-Experimental implementation of dark mode for plotting libraries in Quarto's knitr engine, using its vectorized `dev` chunk option.
+This is an experimental implementation of dark mode for plotting libraries in Quarto's knitr engine, using its vectorized `dev` chunk option.
 
 Implemented in Quarto's "user-land", i.e. Lua and CSS, without any changes to Quarto.
 
-The objective for all engines is to produce HTML with `img.quarto-light-image` and `img.quarto-dark-image` next to each other (inside `figure > p` currently). Then they can easily and safely be swapped using
+## Objective
+
+The objective for all engines is to produce a div with two items classed `.quarto-light-content` and `.quarto-dark-content` next to each other (inside `figure > p` currently).
+
+Then they can easily and safely be swapped using
 
 ```css
-body.quarto-light img.quarto-dark-image {
+body.quarto-light .quarto-dark-content {
   display: none;
 }
-body.quarto-dark img.quarto-light-image {
+body.quarto-dark .quarto-light-content {
   display: none;
 }
 ```
